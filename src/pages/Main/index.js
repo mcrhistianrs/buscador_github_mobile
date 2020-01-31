@@ -1,19 +1,31 @@
-import React, { Component }                           from 'react';
-import {Keyboard}                                     from 'react-native';
-import Icon                                           from 'react-native-vector-icons/MaterialIcons';
-import api                                            from '../../services/api';
-import { Container, Form , Input , SubmitButtom}      from './styles';
+import React, { Component }                                 from 'react';
+import {Keyboard}                                           from 'react-native';
+import Icon                                                 from 'react-native-vector-icons/MaterialIcons';
+import api                                                  from '../../services/api';
+import { Container,
+   Form ,
+   Input ,
+   SubmitButtom,
+   List,
+   User,
+   Avatar,
+   Name,
+   Bio,
+   ProfileButtom,
+   ProfileButtomText }      from './styles';
 import { Picker } from 'react-native';
 
 export default class  Main extends Component {
 
   state = {
     newUser: '',
-    user:[]
+    users:[]
   }
 
   handleAddUser = async () => {
     const { users, newUser} = this.state;
+    console.tron.log(newUser);
+    
     const response = await api.get(`/users/${newUser}`);
     const data = {
       name    : response.data.name,
@@ -32,6 +44,7 @@ export default class  Main extends Component {
 
   render(){
     const { users,newUser} = this.state;
+    console.tron.log(users);
       return (
         <Container>
           <Form>
@@ -47,7 +60,22 @@ export default class  Main extends Component {
               <Icon name="add" size={20} color="#FFF" />
           </SubmitButtom>
           </Form>
-        
+
+
+         <List 
+            data={users}
+            keyExtractor={user => user.login }
+            renderItem={ ({item}) =>(
+              <User>
+                <Avatar source={ {uri:item.avatar} } />
+                <Name>{item.name}</Name>
+                <Bio>{item.bio}</Bio>
+                <ProfileButtom onPress={ () => {}}>
+                  <ProfileButtomText>Ver Perfil</ProfileButtomText>
+                </ProfileButtom>
+              </User>
+            )}
+         />
         </Container>
       );
   }
